@@ -1,0 +1,7 @@
+.TxData a {
+  cursor: default !important;
+}
+
+.TxData .anticon-copy {
+  cursor: pointer !important;
+}

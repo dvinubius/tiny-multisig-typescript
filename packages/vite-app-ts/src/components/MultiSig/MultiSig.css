@@ -1,0 +1,38 @@
+.WalletOverview .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label,
+.WalletOverview .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-content {
+  padding: 0.25rem 1rem;
+}
+
+.WalletOverview .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label {
+  width: 5rem;
+}
+.WalletOverview .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-content {
+  width: 7rem;
+  background-color: white;
+}
+
+.OwnersCard {
+  height: 100%;
+  overflow: hidden;
+}
+
+.OwnersCard .ant-card-body {
+  height: calc(100% - 38px);
+}
+
+.MultiSig {
+  position: relative;
+}
+.MultiSig::after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2rem;
+  background: linear-gradient(hsla(0, 0%, 100%), transparent);
+}
+
+.MultiSigTxItem .ant-descriptions-bordered.ant-descriptions-small .ant-descriptions-item-label {
+  width: 8rem;
+}
