@@ -8,12 +8,12 @@ import createModalFooter from '../Shared/createModalFooter';
 import { useScaffoldProviders as useScaffoldAppProviders } from '~~/components/main/hooks/useScaffoldAppProviders';
 import CreateModalSentOverlay from '../Shared/CreateModalSentOverlay';
 import './CreateMsTx.css';
-import { MsSafeContext } from './MultiSig';
+import { MsVaultContext } from './MultiSig';
 import BytesInput from '../Shared/BytesInput';
 import { ethers } from 'ethers';
 
 const CreateMsTx: FC = () => {
-  const { multiSigSafe } = useContext(MsSafeContext);
+  const { multiSigVault } = useContext(MsVaultContext);
   const { ethPrice, tx } = useContext(InnerAppContext);
   const scaffoldAppProviders = useScaffoldAppProviders();
 
@@ -40,7 +40,7 @@ const CreateMsTx: FC = () => {
       const to = form.getFieldValue('to');
       const value = ethers.utils.parseEther(form.getFieldValue('value'));
       const data = form.getFieldValue('data') ?? '0x';
-      const transaction = multiSigSafe?.submitTransaction(to, value, data);
+      const transaction = multiSigVault?.submitTransaction(to, value, data);
       setTxError(false);
       tx?.(transaction, (update) => {
         if (update && (update.error || update.reason)) {

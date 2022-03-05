@@ -11,10 +11,10 @@ import {
 } from '~~/styles/styles';
 import MSTransactionActions from './MSTransactionActions';
 import { contentWrapperStyle, labelStyle } from './MSTransactionStyles';
-import { MsSafeContext } from './MultiSig';
+import { MsVaultContext } from './MultiSig';
 import Owners from './Owners';
 import { MSTransactionModel } from './models/ms-transaction.model';
-import { useEthersContext } from 'eth-hooks/context';
+import { useBlockNumberContext, useEthersContext } from 'eth-hooks/context';
 import { useScaffoldProviders as useScaffoldAppProviders } from '~~/components/main/hooks/useScaffoldAppProviders';
 import { LayoutContext } from '~~/MainPage';
 import { useBlockNumber } from 'eth-hooks';
@@ -28,10 +28,11 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
   const { transaction } = props;
 
   const ethersContext = useEthersContext();
+  const blockNumber = useBlockNumberContext();
   const userAddress = ethersContext.account;
   const { widthAboveMsTxDetailsFit } = useContext(LayoutContext);
 
-  const { owners, confirmationsRequired: totalConfsNeeded, multiSigSafe } = useContext(MsSafeContext);
+  const { owners, confirmationsRequired: totalConfsNeeded, multiSigVault } = useContext(MsVaultContext);
 
   // CONFIRMATIONS
 
@@ -39,17 +40,16 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
   const [currentNumConfirmations, setCurrentNumConfirmations] = useState<number>();
   const updateConfirmations = async () => {
     if (!owners) return;
-    const confProms = owners.map((o) => multiSigSafe.isConfirmed(transaction.idx, o));
+    const confProms = owners.map((o) => multiSigVault.isConfirmed(transaction.idx, o));
     const confs = await Promise.all(confProms);
     setConfirmations(confs);
     setCurrentNumConfirmations(confs.filter((c) => c).length);
   };
   useEffect(() => {
     updateConfirmations();
-  }, []);
+  }, [blockNumber]);
 
   const scaffoldAppProviders = useScaffoldAppProviders();
-  useBlockNumber(scaffoldAppProviders.localAdaptor?.provider, (blockNumber) => updateConfirmations());
 
   // POSSIBLE USER ACTIONS
 
@@ -61,7 +61,7 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
   const [canRevoke, setCanRevoke] = useState<boolean>();
 
   const updateActions = async () => {
-    const hasConfirmedSelf = !props.isSelfOwner ? false : await multiSigSafe.isConfirmed(transaction.idx, userAddress);
+    const hasConfirmedSelf = !props.isSelfOwner ? false : await multiSigVault.isConfirmed(transaction.idx, userAddress);
 
     if (!props.isSelfOwner || transaction.executed) {
       setCanConfirm(false);
@@ -86,9 +86,7 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
   };
   useEffect(() => {
     updateActions();
-  }, [transaction]);
-
-  useBlockNumber(scaffoldAppProviders.localAdaptor?.provider, (blockNumber) => updateActions());
+  }, [transaction, blockNumber]);
 
   const confsAvailable = typeof currentNumConfirmations !== 'undefined';
 
@@ -130,6 +128,7 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
 
   const ownersPart = (
     <div
+      key="owners"
       style={{
         flex: '1',
         minWidth: '21rem',
@@ -163,7 +162,7 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
   );
 
   const actionsPart = (
-    <div style={{ flex: '1', minWidth: '21rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div key="actions" style={{ flex: '1', minWidth: '21rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <Descriptions bordered size="small" style={{ width: '100%' }}>
         <Descriptions.Item label={<span style={labelStyle}>{confirmationsItem.label}</span>} span={6}>
           <div style={{ ...contentWrapperStyle }}>{confirmationsItem.content}</div>
@@ -172,7 +171,7 @@ const MSTransactionDetails: FC<IMSTransactionDetailsProps> = (props) => {
       {props.isSelfOwner && (
         <MSTransactionActions
           transaction={transaction}
-          multiSigSafe={multiSigSafe}
+          multiSigVault={multiSigVault}
           canConfirm={canConfirm ?? false}
           canExecute={canExecute ?? false}
           canRevoke={canRevoke ?? false}

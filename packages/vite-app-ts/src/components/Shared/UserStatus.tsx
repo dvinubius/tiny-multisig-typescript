@@ -14,7 +14,7 @@ export interface IUserStatusProps {
 
 const UserStatus: FC<IUserStatusProps> = (props) => {
   const onCopy = () => {
-    navigator.clipboard.writeText(`${APP_URL}/safe/${props.idx}`);
+    navigator.clipboard.writeText(`${APP_URL}/vault/${props.idx}`);
     setTimeout(() => setCopyVisible(false), 1500);
   };
   const handleVisibleChange = (v: boolean) => setCopyVisible(v);
@@ -37,7 +37,7 @@ const UserStatus: FC<IUserStatusProps> = (props) => {
   const ownerText = props.isSelfOwner && (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
       <span>
-        You <span style={{ color: keywordColor }}>co-own</span> this safe.
+        You <span style={{ color: keywordColor }}>co-own</span> this vault.
       </span>
       <div style={{ marginLeft: '0.5rem' }}>
         <OwnerMark />
@@ -47,11 +47,11 @@ const UserStatus: FC<IUserStatusProps> = (props) => {
 
   const creatorText = props.isSelfCreator && (
     <span>
-      You <span style={{ color: keywordColor }}>created</span> this safe.
+      You <span style={{ color: keywordColor }}>created</span> this vault.
     </span>
   );
 
-  const viewerText = !props.isSelfOwner && !props.isSelfCreator && <>You are not an owner of this safe.</>;
+  const viewerText = !props.isSelfOwner && !props.isSelfCreator && <>You are not an owner of this vault.</>;
 
   const message = (
     <div

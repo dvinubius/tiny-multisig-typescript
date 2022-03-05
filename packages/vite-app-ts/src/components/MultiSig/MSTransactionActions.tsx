@@ -1,13 +1,9 @@
 import React, { FC, useContext, useState } from 'react';
 import { RollbackOutlined, SendOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import { MsSafeContext } from './MultiSig';
-import { dialogOverlayGradient, errorColor, softTextColor, softBorder, cardGradientGrey } from '~~/styles/styles';
+import { MsVaultContext } from './MultiSig';
+import { errorColor, softBorder, cardGradientGrey } from '~~/styles/styles';
 import { MSTransactionModel } from './models/ms-transaction.model';
-import { useEthersContext } from 'eth-hooks/context';
-import { EthComponentsSettingsContext } from '~~/eth-components/models';
-import { useGasPrice } from 'eth-hooks';
-import { transactor } from '~~/eth-components/functions';
 import { InnerAppContext } from '~~/MainPage';
 
 export interface IMSTransactionActions {
@@ -15,12 +11,12 @@ export interface IMSTransactionActions {
   canConfirm: boolean;
   canExecute: boolean;
   canRevoke: boolean;
-  multiSigSafe: any;
+  multiSigVault: any;
 }
 
 const MSTransactionActions: FC<IMSTransactionActions> = (props) => {
   const { tx } = useContext(InnerAppContext);
-  const { balance, multiSigSafe } = useContext(MsSafeContext);
+  const { balance, multiSigVault } = useContext(MsVaultContext);
 
   const [pendingActionConfirm, setPendingActionConfirm] = useState<boolean>(false);
   const [pendingActionRevoke, setPendingActionRevoke] = useState<boolean>(false);
@@ -28,7 +24,7 @@ const MSTransactionActions: FC<IMSTransactionActions> = (props) => {
 
   const confirmTx = () => {
     setPendingActionConfirm(true);
-    const confTx = props.multiSigSafe.confirmTransaction(props.transaction.idx);
+    const confTx = props.multiSigVault.confirmTransaction(props.transaction.idx);
     tx?.(confTx, (update) => {
       if (update && (update.error || update.reason)) {
         setPendingActionConfirm(false);
@@ -48,7 +44,7 @@ const MSTransactionActions: FC<IMSTransactionActions> = (props) => {
 
   const executeTx = () => {
     setPendingActionExecute(true);
-    const execTx = multiSigSafe.executeTransaction(props.transaction.idx);
+    const execTx = multiSigVault.executeTransaction(props.transaction.idx);
     tx?.(execTx, (update) => {
       if (update && (update.error || update.reason)) {
         setPendingActionExecute(false);
@@ -68,7 +64,7 @@ const MSTransactionActions: FC<IMSTransactionActions> = (props) => {
 
   const revokeTx = () => {
     setPendingActionRevoke(true);
-    const revokeTx = multiSigSafe.revokeConfirmation(props.transaction.idx);
+    const revokeTx = multiSigVault.revokeConfirmation(props.transaction.idx);
     tx?.(revokeTx, (update) => {
       if (update && (update.error || update.reason)) {
         setPendingActionRevoke(false);

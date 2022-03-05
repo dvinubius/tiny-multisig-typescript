@@ -43,7 +43,7 @@ export const MainPageHeader: FC<IMainPageHeaderProps> = (props) => {
         <Link to="/">
           <PageHeader
             title={<CodeSandboxOutlined style={{ fontSize: '2.25rem', transform: 'translateY(0.125rem)' }} />}
-            subTitle={<div style={{ fontSize: '1.25rem' }}>Meta MultiSig</div>}
+            subTitle={<div style={{ fontSize: '1.25rem' }}>Tiny MultiSig</div>}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', height: '54px', padding: '1rem' }}
           />
         </Link>

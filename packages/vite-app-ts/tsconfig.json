@@ -7,7 +7,7 @@
     "allowJs": false,
     "declarationMap": true,
     "declaration": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "allowSyntheticDefaultImports": true,
@@ -22,7 +22,7 @@
       // "@ethersproject/wallet"
     ],
     "typeRoots": ["node_modules/@types", "helpers/types"] /* List of folders to include type definitions from. */,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "module": "es2020",
     "moduleResolution": "Node",
     "incremental": true,

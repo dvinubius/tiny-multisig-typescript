@@ -86,8 +86,8 @@ const MSTransactionOverview: FC<IMSTransactionOverviewProps> = (props) => {
                 </div>
               ),
             },
-          ].map((item) => (
-            <Descriptions.Item label={<span style={labelStyle}>{item.label}</span>} span={6}>
+          ].map((item, idx) => (
+            <Descriptions.Item key={idx + '--'} label={<span style={labelStyle}>{item.label}</span>} span={6}>
               <div style={{ ...contentWrapperStyle }}>{item.content}</div>
             </Descriptions.Item>
           ))}
@@ -100,8 +100,8 @@ const MSTransactionOverview: FC<IMSTransactionOverviewProps> = (props) => {
           minWidth: '21rem',
         }}>
         <Descriptions bordered size="small" style={{ width: '100%' }}>
-          {operationDetails.map((item) => (
-            <Descriptions.Item label={<span style={labelStyle}>{item.label}</span>} span={6}>
+          {operationDetails.map((item, idx) => (
+            <Descriptions.Item key={idx + '--'} label={<span style={labelStyle}>{item.label}</span>} span={6}>
               <div style={{ ...contentWrapperStyle }}>{item.content}</div>
             </Descriptions.Item>
           ))}

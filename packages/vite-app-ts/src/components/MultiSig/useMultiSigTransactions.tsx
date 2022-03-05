@@ -12,7 +12,7 @@ export interface MultiSigTransactionsResult {
   transactions?: MultiSigTransactions;
 }
 
-export const useMultiSigTransactions = (multiSigSafe: any): MultiSigTransactionsResult => {
+export const useMultiSigTransactions = (multiSigVault: any): MultiSigTransactionsResult => {
   const [initializing, setInitializing] = useState<boolean>(true);
   const [transactions, setTransactions] = useState<MultiSigTransactions>();
 
@@ -48,13 +48,13 @@ export const useMultiSigTransactions = (multiSigSafe: any): MultiSigTransactions
   const [updateNonce, setUpdateNonce] = useState<number>(0);
   useEffect(() => combineSubmittedAndExecuted(), [updateNonce]);
 
-  const [submitTxEvents] = useEventListener(multiSigSafe, 'SubmitTransaction', 0);
+  const [submitTxEvents] = useEventListener(multiSigVault, 'SubmitTransaction', 0);
   useEffect(() => {
     if (!transactions || submitTxEvents.length !== transactions.pending.length + transactions.executed.length) {
       const submittedTxs: MSTransactionModel[] = submitTxEvents
         .map((event) => ({
           owner: event.args[0],
-          idx: event.args[1],
+          idx: event.args[1].toNumber(),
           to: event.args[2],
           value: event.args[3],
           data: event.args[4],
@@ -62,7 +62,7 @@ export const useMultiSigTransactions = (multiSigSafe: any): MultiSigTransactions
           executed: false,
         }))
         .reverse();
-      const txsDetailsPromises = submittedTxs.map((tx) => multiSigSafe.getTransaction(tx.idx));
+      const txsDetailsPromises = submittedTxs.map((tx) => multiSigVault.getTransaction(tx.idx));
       Promise.all(txsDetailsPromises).then((txsDetails) => {
         submittedTxs.forEach((tx, idx) => {
           tx.executed = txsDetails[idx].executed;
@@ -74,12 +74,12 @@ export const useMultiSigTransactions = (multiSigSafe: any): MultiSigTransactions
     }
   }, [submitTxEvents]);
 
-  const [executeTxEvents] = useEventListener(multiSigSafe, 'ExecuteTransaction', 0);
+  const [executeTxEvents] = useEventListener(multiSigVault, 'ExecuteTransaction', 0);
   useEffect(() => {
     const executedTxs = executeTxEvents.map((event) => ({
-      owner: event.args.owner,
-      idx: event.args.txIndex,
-      dateExecuted: new Date(event.args.timestamp.toNumber() * 1000),
+      owner: event.args[0],
+      idx: event.args[1].toNumber(),
+      dateExecuted: new Date(event.args[2].toNumber() * 1000),
     }));
     setLastExecutedTxs(executedTxs);
     setUpdateNonce(Math.random());

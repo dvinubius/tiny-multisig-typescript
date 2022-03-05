@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, createContext, useContext } from 'react
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import '~~/styles/main-page.css';
-import { useContractReader, useBalance, useEthersAdaptorFromProviderOrSigners, useGasPrice } from 'eth-hooks';
+import { useContractReader, useEthersAdaptorFromProviderOrSigners, useGasPrice } from 'eth-hooks';
 import { useDexEthPrice } from 'eth-hooks/dapps';
 
 import { useEventListener } from 'eth-hooks';
@@ -12,14 +12,14 @@ import { useBurnerFallback } from '~~/components/main/hooks/useBurnerFallback';
 import { useEthersContext } from 'eth-hooks/context';
 import { useAppContracts, useConnectAppContracts, useLoadAppContracts } from '~~/config/contractContext';
 import { asEthersAdaptor } from 'eth-hooks/functions';
-import { MSSafeEntity } from './models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from './models/contractFactory/ms-vault-entity.model';
 import { loadNonDeployedContractAbi } from './functions/loadNonDeployedAbis';
 import { InjectableAbis } from './generated/injectable-abis/injectable-abis.type';
 import { useWindowWidth } from '@react-hook/window-size';
 
 export interface InnerAppContext {
   injectableAbis?: InjectableAbis;
-  createdContracts?: MSSafeEntity[];
+  createdContracts?: MSVaultEntity[];
   numCreatedContracts?: number;
   ethPrice?: number;
   gasPrice?: number;
@@ -104,14 +104,14 @@ export const Main: FC = () => {
   const factory = useAppContracts('MSFactory', ethersContext.chainId);
 
   // ** 📟 Listen for broadcast events
-  const [createMultiSigSafeEvents] = useEventListener(factory, 'CreateMultiSigSafe', 0);
-  console.log('📟 CreateMultiSigSafe events:', createMultiSigSafeEvents);
-  const [createdContracts, setCreatedContracts] = useState<MSSafeEntity[]>();
+  const [createMultiSigVaultEvents] = useEventListener(factory, 'CreateMultiSigVault', 0);
+  console.log('📟 CreateMultiSigVault events:', createMultiSigVaultEvents);
+  const [createdContracts, setCreatedContracts] = useState<MSVaultEntity[]>();
   const account = ethersContext.account;
   useEffect(() => {
-    if (!createdContracts || createdContracts.length !== createMultiSigSafeEvents.length) {
+    if (!createdContracts || createdContracts.length !== createMultiSigVaultEvents.length) {
       setCreatedContracts(
-        createMultiSigSafeEvents
+        createMultiSigVaultEvents
           .map((event) => ({
             idx: event.args[0].toNumber(),
             address: event.args[1],
@@ -124,23 +124,23 @@ export const Main: FC = () => {
           .reverse() // most recent first
       );
     }
-  }, [createMultiSigSafeEvents, account]);
+  }, [createMultiSigVaultEvents, account]);
 
   const [numCreated] = useContractReader(
     factory,
     factory?.numberOfContracts,
     [],
-    factory?.filters.CreateMultiSigSafe()
+    factory?.filters.CreateMultiSigVault()
   );
 
   const [injectableAbis, setInjectableAbis] = useState<InjectableAbis>();
   useEffect(() => {
     const load = async () => {
-      const MultiSigSafe = await loadNonDeployedContractAbi('MultiSigSafe');
-      if (MultiSigSafe) {
-        setInjectableAbis({ MultiSigSafe });
+      const MultiSigVault = await loadNonDeployedContractAbi('MultiSigVault');
+      if (MultiSigVault) {
+        setInjectableAbis({ MultiSigVault });
       } else {
-        console.error(`Could not find injectable abi for MultiSigSafe`);
+        console.error(`Could not find injectable abi for MultiSigVault`);
       }
     };
     load();
@@ -204,7 +204,7 @@ export const Main: FC = () => {
             <div className="AppScroller">
               <Routes>
                 <Route
-                  path="/mysafes/:idx"
+                  path="/myvaults/:idx"
                   element={
                     <div className="AppCenteredCol">
                       <MultiSigsPage />
@@ -212,15 +212,15 @@ export const Main: FC = () => {
                   }
                 />
                 <Route
-                  path="/mysafes"
+                  path="/myvaults"
                   element={
                     <div className="AppCenteredCol">
                       <MultiSigsPage />
                     </div>
                   }
                 />
-                <Route path="/" element={<Navigate replace to="/mysafes" />} />
-                <Route path="/safe/:idx" element={<SingleMultiSigPage />} />
+                <Route path="/" element={<Navigate replace to="/myvaults" />} />
+                <Route path="/vault/:idx" element={<SingleMultiSigPage />} />
                 <Route
                   path="/contracts"
                   element={

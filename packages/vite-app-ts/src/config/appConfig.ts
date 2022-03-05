@@ -6,7 +6,7 @@ import { INFURA_ID } from './apiKeysConfig';
 export const DEBUG = false;
 export const IS_DEVELOPMENT_ENV = process.env.NODE_ENV === 'DEVELOPMENT';
 
-export const APP_URL = 'meta-multisig.surge.sh';
+export const APP_URL = 'tiny-multisig.surge.sh';
 
 /** ******************************
  * TARGET NETWORK CONFIG
@@ -17,7 +17,7 @@ export const APP_URL = 'meta-multisig.surge.sh';
  * This constant is your target network that the app is pointed at
  * 🤚🏽  Set your target frontend network <--- select your target frontend network(localhost, rinkeby, xdai, mainnet)
  */
-export const TARGET_NETWORK_INFO: TNetworkInfo = NETWORKS.localhost;
+export const TARGET_NETWORK_INFO: TNetworkInfo = NETWORKS.rinkeby;
 
 if (DEBUG) console.log(`📡 Connecting to ${TARGET_NETWORK_INFO.name}`);
 

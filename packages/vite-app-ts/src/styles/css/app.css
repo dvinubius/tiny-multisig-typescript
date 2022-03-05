@@ -92,3 +92,22 @@ button {
   background-color: hsla(209deg, 100%, 92%, 0.13) !important;
   /* border: 1px solid hsla(209deg, 100%, 32%, 0.2); */
 }
+
+.anticon.anticon-left,
+.anticon.anticon-plus,
+.anticon.anticon-send,
+.anticon.anticon-arrows-alt {
+  transform: translateY(-1px);
+}
+.anticon.anticon-rollback,
+.anticon.anticon-home {
+  transform: translateY(-2px);
+}
+
+.anticon.anticon-loading {
+  transform: translateY(-3px);
+}
+
+.ant-typography-copy {
+  transform: translateY(-4px);
+}

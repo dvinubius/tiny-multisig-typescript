@@ -7,7 +7,7 @@ import StackGrid from 'react-stack-grid';
 import NaviMultiSigs from './NaviMultiSigs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { InnerAppContext, LayoutContext } from '~~/MainPage';
-import { MSSafeEntity } from '../../../models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from '../../../models/contractFactory/ms-vault-entity.model';
 import { useEthersContext } from 'eth-hooks/context';
 import CreateMultiSig from '~~/components/Factory/CreateMultiSig';
 import { MultiSig } from '~~/components/MultiSig/MultiSig';
@@ -28,7 +28,7 @@ const MultiSigsPage: FC = () => {
   const [eventQueryExpired, setEventQueryExpired] = useState<boolean>(false);
   useEffect(() => {
     setTimeout(() => setEventQueryExpired(true), 6500);
-  }, []); // if after this time no results, assume this user nas no owned safes
+  }, []); // if after this time no results, assume this user nas no owned vaults
 
   const [userAddressInitExpired, setUserAddressInitExpired] = useState(false);
   useEffect(() => {
@@ -37,7 +37,7 @@ const MultiSigsPage: FC = () => {
 
   const ethersContext = useEthersContext();
   const account = ethersContext.account;
-  const isMine = (c: MSSafeEntity) => !!account && (c.owners.includes(account) || c.creator === account);
+  const isMine = (c: MSVaultEntity) => !!account && (c.owners.includes(account) || c.creator === account);
 
   const canGetData = chosenContractMode
     ? !!idxQueryParam && !!createdContracts && !!account && !!injectableAbis
@@ -52,7 +52,7 @@ const MultiSigsPage: FC = () => {
 
   const handleOpenContract = useCallback((c) => {
     setDisplayBack(true);
-    navigate(`/mysafes/${c.idx}`);
+    navigate(`/myvaults/${c.idx}`);
   }, []);
 
   const handleBack = () => {
@@ -115,7 +115,7 @@ const MultiSigsPage: FC = () => {
           size="large"
           onClick={() => navigate('/')}>
           <HomeOutlined />
-          My Safes
+          My Vaults
         </Button>
       )}
     </div>
@@ -129,7 +129,7 @@ const MultiSigsPage: FC = () => {
     <CodeSandboxOutlined />
   ) : (
     <>
-      <CodeSandboxOutlined /> My Safes
+      <CodeSandboxOutlined /> My Vaults
     </>
   );
 
@@ -170,7 +170,7 @@ const MultiSigsPage: FC = () => {
             <>
               <Spin size="large" />
               <div style={{ color: softTextColor, fontSize: '1.25rem' }}>
-                {chosenContractMode ? 'Connecting to your safe...' : 'Retrieving your safes...'}
+                {chosenContractMode ? 'Connecting to your vault...' : 'Retrieving your vaults...'}
               </div>
             </>
           )}
@@ -178,8 +178,8 @@ const MultiSigsPage: FC = () => {
           {eventQueryExpired && (
             <div style={{ color: softTextColor, fontSize: '1.25rem' }}>
               {chosenContractMode
-                ? 'Could not find this safe among your own'
-                : "Looks like you don't own any safes yet"}
+                ? 'Could not find this vault among your own'
+                : "Looks like you don't own any vaults yet"}
             </div>
           )}
         </div>
@@ -199,7 +199,7 @@ const MultiSigsPage: FC = () => {
             margin: '0 auto 8rem',
           }}>
           <StackGrid columnWidth="100%" gutterHeight={16}>
-            {myContracts?.map((c: MSSafeEntity) => (
+            {myContracts?.map((c: MSVaultEntity) => (
               <div key={c.address}>
                 <MSContractItem openContract={handleOpenContract} contract={c} />
               </div>

@@ -3,13 +3,13 @@ import { breakPointMsTxDetailsFit, cardGradient, mediumButtonMinWidth, softTextC
 
 import { Button, Card, Descriptions } from 'antd';
 import { ArrowsAltOutlined, LoginOutlined } from '@ant-design/icons';
-import { MSSafeEntity } from '~~/models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from '~~/models/contractFactory/ms-vault-entity.model';
 import { LayoutContext } from '~~/MainPage';
 import { Address } from '~~/eth-components/ant';
 
 export interface IMSContractItemProps {
-  openContract: (c: MSSafeEntity) => void;
-  contract: MSSafeEntity;
+  openContract: (c: MSVaultEntity) => void;
+  contract: MSVaultEntity;
 }
 
 const MSContractItem: FC<IMSContractItemProps> = (props) => {
@@ -55,6 +55,7 @@ const MSContractItem: FC<IMSContractItemProps> = (props) => {
           </div>
           <Button
             size="large"
+            className="flex-center-imp"
             style={{
               fontSize: '1rem',
 

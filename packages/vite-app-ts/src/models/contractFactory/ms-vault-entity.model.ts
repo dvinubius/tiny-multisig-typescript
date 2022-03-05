@@ -1,4 +1,4 @@
-export interface MSSafeEntity {
+export interface MSVaultEntity {
   idx: number;
   address: string;
   name: string;

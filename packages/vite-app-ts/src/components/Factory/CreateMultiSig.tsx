@@ -109,7 +109,7 @@ const CreateMultiSig: FC = () => {
         return;
       }
       setPendingCreate(true);
-      const transaction = msFactory.createMultiSigSafe(name, owners, numConfs);
+      const transaction = msFactory.createMultiSigVault(name, owners, numConfs);
       setTxError(false);
       tx(transaction, (update) => {
         if (update && (update.error || update.reason)) {
@@ -166,12 +166,12 @@ const CreateMultiSig: FC = () => {
     <div>
       <Button type="primary" size="large" className="inline-flex-center-imp" onClick={() => setVisibleModal(true)}>
         <PlusOutlined />
-        Create Safe
+        Create Vault
       </Button>
 
       <Modal
         destroyOnClose={true}
-        title="Create MultiSig Safe"
+        title="Create MultiSig Vault"
         style={{ top: 120 }}
         visible={visibleModal}
         onOk={handleSubmit}
@@ -182,8 +182,8 @@ const CreateMultiSig: FC = () => {
           <CreateModalSentOverlay
             txError={txError}
             txSuccess={txSuccess}
-            pendingText="Creating Safe"
-            successText="MultiSig Safe Created"
+            pendingText="Creating Vault"
+            successText="MultiSig Vault Created"
             errorText="Transaction Failed"
           />
         )}

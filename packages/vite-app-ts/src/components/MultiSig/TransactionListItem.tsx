@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button, Divider } from 'antd';
 import MSTransactionOverview from './MSTransactionOverview';
-import { MsSafeContext } from './MultiSig';
+import { MsVaultContext } from './MultiSig';
 import {
   detailsHeightLarge,
   detailsHeightNarrow,
@@ -25,7 +25,7 @@ export interface ITransactionListItemProps {
 const TransactionListItem: FC<ITransactionListItemProps> = function (props) {
   const ethersContext = useEthersContext();
   const userAddress = ethersContext.account;
-  const { owners } = useContext(MsSafeContext);
+  const { owners } = useContext(MsVaultContext);
   const { widthAboveMsTxDetailsFit } = useContext(LayoutContext);
 
   const detailsHeight = widthAboveMsTxDetailsFit ? detailsHeightNarrow : detailsHeightLarge;

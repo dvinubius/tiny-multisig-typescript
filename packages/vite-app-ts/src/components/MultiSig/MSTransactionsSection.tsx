@@ -5,7 +5,7 @@ import React, { FC, useContext, useState } from 'react';
 import { LayoutContext } from '~~/MainPage';
 import { mainColWidthRem, mediumButtonMinWidth, softTextColor } from '~~/styles/styles';
 import CreateMsTx from './CreateMsTx';
-import { MsSafeContext } from './MultiSig';
+import { MsVaultContext } from './MultiSig';
 import TransactionListItem from './TransactionListItem';
 
 const { TabPane } = Tabs;
@@ -13,7 +13,7 @@ const MSTransactionsSection: FC = () => {
   const ethersContext = useEthersContext();
   const userAddress = ethersContext.account;
 
-  const { owners, msTransactions } = useContext(MsSafeContext);
+  const { owners, msTransactions } = useContext(MsVaultContext);
   const { widthAboveMsFit } = useContext(LayoutContext);
 
   const isSelfOwner = !!owners && !!userAddress && owners.includes(userAddress);

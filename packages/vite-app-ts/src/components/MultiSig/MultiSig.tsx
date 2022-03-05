@@ -21,7 +21,7 @@ import { InnerAppContext, LayoutContext } from '../../MainPage';
 import { BaseContract } from 'ethers';
 import { asEthersAdaptor } from 'eth-hooks/functions';
 import { useEthersContext } from 'eth-hooks/context';
-import { MSSafeEntity } from '~~/models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from '~~/models/contractFactory/ms-vault-entity.model';
 import { Address, Balance } from '~~/eth-components/ant';
 import { useScaffoldProviders as useScaffoldAppProviders } from '~~/components/main/hooks/useScaffoldAppProviders';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -30,8 +30,8 @@ import { MSTransactionModel } from './models/ms-transaction.model';
 import MSTransactionsSection from './MSTransactionsSection';
 import { remToPx } from '~~/helpers/layoutCalc';
 
-export const MsSafeContext = createContext<{
-  multiSigSafe?: any;
+export const MsVaultContext = createContext<{
+  multiSigVault?: any;
   owners?: string[];
   confirmationsRequired?: number;
   msTransactions?: { pending: MSTransactionModel[]; executed: MSTransactionModel[] };
@@ -39,7 +39,7 @@ export const MsSafeContext = createContext<{
 }>({});
 
 export interface IMultiSigProps {
-  contract: MSSafeEntity | undefined;
+  contract: MSVaultEntity | undefined;
 }
 
 export const MultiSig: FC<IMultiSigProps> = (props) => {
@@ -48,15 +48,15 @@ export const MultiSig: FC<IMultiSigProps> = (props) => {
   const ethersContext = useEthersContext();
   const signer = ethersContext.signer;
   const userAddress = ethersContext.account ?? '';
-  const abi = injectableAbis?.MultiSigSafe;
+  const abi = injectableAbis?.MultiSigVault;
 
-  const multiSigSafeRaw: any | undefined =
+  const multiSigVaultRaw: any | undefined =
     abi &&
     props.contract &&
     (new BaseContract(props.contract.address, abi, asEthersAdaptor(ethersContext).provider) as any);
-  const multiSigSafe = signer ? multiSigSafeRaw?.connect(signer) : multiSigSafeRaw;
+  const multiSigVault = signer ? multiSigVaultRaw?.connect(signer) : multiSigVaultRaw;
 
-  const { transactions: multiSigTxs, initializing: initializingTxs } = useMultiSigTransactions(multiSigSafe);
+  const { transactions: multiSigTxs, initializing: initializingTxs } = useMultiSigTransactions(multiSigVault);
 
   const scaffoldAppProviders = useScaffoldAppProviders();
   const injectedProvider = scaffoldAppProviders.localAdaptor;
@@ -73,19 +73,19 @@ export const MultiSig: FC<IMultiSigProps> = (props) => {
   );
 
   const msWalletContext = {
-    multiSigSafe,
+    multiSigVault,
     owners,
     confirmationsRequired,
     msTransactions: multiSigTxs,
     balance,
   };
 
-  const ready = !!props.contract && multiSigSafe && owners && confirmationsRequired && !initializingTxs && multiSigTxs;
+  const ready = !!props.contract && multiSigVault && owners && confirmationsRequired && !initializingTxs && multiSigTxs;
 
   return ready ? (
-    <MsSafeContext.Provider value={msWalletContext}>
+    <MsVaultContext.Provider value={msWalletContext}>
       <MultiSigDisplay userStatusDisplay={userStatusDisplay} />
-    </MsSafeContext.Provider>
+    </MsVaultContext.Provider>
   ) : (
     <div style={{ margin: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '30vh' }}>
       <Spin size="large" />
@@ -99,7 +99,7 @@ export interface IMultiSigDisplayProps {
 
 const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
   const { ethPrice } = useContext(InnerAppContext);
-  const { owners, confirmationsRequired, balance, multiSigSafe } = useContext(MsSafeContext);
+  const { owners, confirmationsRequired, balance, multiSigVault: multiSigVault } = useContext(MsVaultContext);
   const { widthAboveMsTxDetailsFit, widthAboveUserStatusDisplayFit } = useContext(LayoutContext);
   const labelStyle = {
     fontSize: '0.875rem',
@@ -158,7 +158,7 @@ const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
                   alignItems: 'stretch',
                   gap: '1rem',
                 }}>
-                <Descriptions bordered size="small" style={{ width: '100%' }}>
+                <Descriptions bordered size="small" style={{ width: '100%' }} column={6}>
                   <Descriptions.Item label={<span style={labelStyle}>{'Balance'}</span>} span={6}>
                     <div style={{ ...balanceWrapperStyle, opacity: 0.8 }}>
                       <Balance
@@ -181,7 +181,7 @@ const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Address fontSize={18} address={multiSigSafe?.address} />
+                  <Address fontSize={18} address={multiSigVault?.address} />
                 </div>
 
                 <div
@@ -194,7 +194,7 @@ const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
                     border: softBorder,
                   }}>
                   <QR
-                    value={multiSigSafe ? multiSigSafe.address : ''}
+                    value={multiSigVault ? multiSigVault.address : ''}
                     size={180}
                     level="H"
                     includeMargin
@@ -212,7 +212,7 @@ const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
                   alignItems: 'stretch',
                   gap: '1rem',
                 }}>
-                <Descriptions bordered size="small" style={{ width: '100%' }}>
+                <Descriptions bordered size="small" style={{ width: '100%' }} column={6}>
                   <Descriptions.Item
                     label={<div style={{ ...labelStyle, width: '6rem' }}>{'Confirmations'}</div>}
                     span={6}>
@@ -222,7 +222,7 @@ const MultiSigDisplay: FC<IMultiSigDisplayProps> = (props) => {
                   </Descriptions.Item>
                 </Descriptions>
 
-                <Descriptions bordered size="small" style={{ width: '100%' }}>
+                <Descriptions bordered size="small" style={{ width: '100%' }} column={6}>
                   <Descriptions.Item label={<div style={{ ...labelStyle, width: '6rem' }}>{'Owners'}</div>} span={6}>
                     <div
                       style={{ ...balanceWrapperStyle, justifyContent: 'flex-end', fontSize: '1rem' }}

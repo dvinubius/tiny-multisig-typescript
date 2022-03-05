@@ -27,7 +27,7 @@ import { create } from 'ipfs-http-client';
 /**
  * Set your target network!!!
  */
-const TARGET_NETWORK = 'localhost';
+const TARGET_NETWORK = 'rinkeby';
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //

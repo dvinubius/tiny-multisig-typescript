@@ -108,34 +108,36 @@ export const EtherInput: FC<IEtherInputProps> = (props) => {
   }, [currentValue]);
 
   return (
-    <Input
-      placeholder={props.placeholder ? props.placeholder : 'amount in ' + mode}
-      autoFocus={props.autoFocus}
-      prefix={prefix}
-      value={display}
-      addonAfter={addonAfter}
-      onChange={(e): void => {
-        const newValue = e.target.value;
-        if (mode === 'USD') {
-          const possibleNewValue = parseFloat(newValue);
-          if (possibleNewValue) {
-            const ethValue = possibleNewValue / (props.price ?? 1);
-            setValue(ethValue.toString());
+    <div style={props.wrapperStyle}>
+      <Input
+        placeholder={props.placeholder ? props.placeholder : 'amount in ' + mode}
+        autoFocus={props.autoFocus}
+        prefix={prefix}
+        value={display}
+        addonAfter={addonAfter}
+        onChange={(e): void => {
+          const newValue = e.target.value;
+          if (mode === 'USD') {
+            const possibleNewValue = parseFloat(newValue);
+            if (possibleNewValue) {
+              const ethValue = possibleNewValue / (props.price ?? 1);
+              setValue(ethValue.toString());
+              if (typeof props.onChange === 'function') {
+                props.onChange(ethValue.toString());
+              }
+              setDisplay(newValue);
+            } else {
+              setDisplay(newValue);
+            }
+          } else {
+            setValue(newValue);
             if (typeof props.onChange === 'function') {
-              props.onChange(ethValue.toString());
+              props.onChange(newValue);
             }
             setDisplay(newValue);
-          } else {
-            setDisplay(newValue);
           }
-        } else {
-          setValue(newValue);
-          if (typeof props.onChange === 'function') {
-            props.onChange(newValue);
-          }
-          setDisplay(newValue);
-        }
-      }}
-    />
+        }}
+      />
+    </div>
   );
 };

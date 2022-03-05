@@ -1,13 +1,11 @@
 import React, { FC, useContext, useState } from 'react';
 import { GenericContract } from '~~/eth-components/ant/generic-contract';
 import { BaseContract, Contract } from 'ethers';
-import { useContractLoader } from 'eth-hooks';
 import { IScaffoldAppProviders } from '~~/components/main/hooks/useScaffoldAppProviders';
 import { useEthersContext } from 'eth-hooks/context';
-import { NETWORKS } from '~~/models/constants/networks';
 import { useAppContracts } from '~~/config/contractContext';
 import { Button, Divider } from 'antd';
-import { MSSafeEntity } from '../../models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from '../../models/contractFactory/ms-vault-entity.model';
 import { LeftOutlined } from '@ant-design/icons';
 import { mediumButtonMinWidth } from '~~/styles/styles';
 import { InnerAppContext } from '~~/MainPage';
@@ -31,11 +29,11 @@ export const MainPageContracts: FC<IMainPageContractsProps> = (props) => {
   const signer = ethersContext.signer;
 
   const { injectableAbis, createdContracts } = useContext(InnerAppContext);
-  const abi = injectableAbis?.MultiSigSafe;
+  const abi = injectableAbis?.MultiSigVault;
 
   const [openedDebugContract, setOpenedDebugContract] = useState<{
-    multiSigSafe: BaseContract;
-    entity: MSSafeEntity;
+    multiSigVault: BaseContract;
+    entity: MSVaultEntity;
   }>();
   const handleBack = () => setOpenedDebugContract(undefined);
 
@@ -84,7 +82,7 @@ export const MainPageContracts: FC<IMainPageContractsProps> = (props) => {
               <ContractDebugHeader contract={openedDebugContract.entity} />
               <GenericContract
                 contractName="YourContract"
-                contract={openedDebugContract.multiSigSafe}
+                contract={openedDebugContract.multiSigVault}
                 key={openedDebugContract.entity.address}
                 mainnetAdaptor={props.scaffoldAppProviders.mainnetAdaptor}
                 blockExplorer={props.scaffoldAppProviders.targetNetwork.blockExplorer}
@@ -95,15 +93,15 @@ export const MainPageContracts: FC<IMainPageContractsProps> = (props) => {
           {/* LIST */}
           {!openedDebugContract && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {createdContracts.map((createdContract: MSSafeEntity) => {
-                const multiSigSafeRaw: any | undefined =
+              {createdContracts.map((createdContract: MSVaultEntity) => {
+                const multiSigVaultRaw: any | undefined =
                   abi &&
                   (new BaseContract(createdContract.address, abi, asEthersAdaptor(ethersContext).provider) as any);
-                const multiSigSafe = signer ? multiSigSafeRaw?.connect(signer) : multiSigSafeRaw;
+                const multiSigVault = signer ? multiSigVaultRaw?.connect(signer) : multiSigVaultRaw;
 
                 const handleOpen = () =>
                   setOpenedDebugContract({
-                    multiSigSafe,
+                    multiSigVault,
                     entity: createdContract,
                   });
                 return (
@@ -117,54 +115,5 @@ export const MainPageContracts: FC<IMainPageContractsProps> = (props) => {
         </>
       )}
     </div>
-  );
-
-  return (
-    <>
-      <>
-        {/* **********
-          ❓ this scaffolding is full of commonly used components
-          this <Contract/> component will automatically parse your ABI
-          and give you a form to interact with it locally
-        ********** */}
-        {/* <GenericContract
-          contractName="YourContract"
-          contract={yourContract}
-          mainnetAdaptor={props.scaffoldAppProviders.mainnetAdaptor}
-          blockExplorer={props.scaffoldAppProviders.targetNetwork.blockExplorer}
-        /> */}
-        <GenericContract
-          contractName="YourContractFactory"
-          contract={multiSigFactory}
-          mainnetAdaptor={props.scaffoldAppProviders.mainnetAdaptor}
-          blockExplorer={props.scaffoldAppProviders.targetNetwork.blockExplorer}
-        />
-
-        {/* **********
-         * ❓ uncomment for a second contract:
-         ********** */}
-        {/*
-          <GenericContract
-            contractName="SecondContract"
-            contract={contract={contractList?.['SecondContract']}
-            mainnetProvider={props.appProviders.mainnetProvider}
-            blockExplorer={props.appProviders.targetNetwork.blockExplorer}
-            contractConfig={props.contractConfig}
-          />
-        */}
-
-        {/***********
-         *  ❓ Uncomment to display and interact with an external contract (DAI on mainnet):
-         ********** */}
-        {/* {
-          <GenericContract
-            contractName="DAI"
-            contract={mainnetDai}
-            mainnetAdaptor={props.scaffoldAppProviders.mainnetAdaptor}
-            blockExplorer={NETWORKS.mainnet.blockExplorer}
-          />
-        } */}
-      </>
-    </>
   );
 };

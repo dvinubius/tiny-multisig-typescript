@@ -2,7 +2,7 @@ import { List, Spin } from 'antd';
 import React, { FC, useContext, useState } from 'react';
 
 import './MultiSig.css';
-import { MsSafeContext } from './MultiSig';
+import { MsVaultContext } from './MultiSig';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { primaryColor } from '~~/styles/styles';
 import { Address } from '~~/eth-components/ant/Address';
@@ -15,7 +15,7 @@ export interface IOwnersProps {
 
 const Owners: FC<IOwnersProps> = (props) => {
   const { account } = useEthersContext();
-  let { owners } = useContext(MsSafeContext);
+  let { owners } = useContext(MsVaultContext);
 
   const singleColumn = (
     <>
@@ -24,7 +24,7 @@ const Owners: FC<IOwnersProps> = (props) => {
           <div>
             <List size="small">
               {owners.map((owner) => (
-                <List.Item style={{ padding: '0.25rem 2rem', display: 'flex', justifyContent: 'center' }}>
+                <List.Item key={owner} style={{ padding: '0.25rem 2rem', display: 'flex', justifyContent: 'center' }}>
                   <div style={{ position: 'relative' }}>
                     <Address address={owner} fontSize={14} />
                     <div style={{ position: 'absolute', right: '-2rem', top: 0 }}>
@@ -47,7 +47,7 @@ const Owners: FC<IOwnersProps> = (props) => {
           <div>
             <List size="small">
               {owners.map((owner, idx) => (
-                <List.Item style={{ padding: '0.25rem 2rem', display: 'flex', justifyContent: 'center' }}>
+                <List.Item key={owner} style={{ padding: '0.25rem 2rem', display: 'flex', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                       <Address address={owner} fontSize={14} />

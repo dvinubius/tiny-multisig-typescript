@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { MSSafeEntity } from '../../models/contractFactory/ms-safe-entity.model';
+import { MSVaultEntity } from '../../models/contractFactory/ms-vault-entity.model';
 import { Address } from '../../eth-components/ant/Address';
 import './ContractDebugHeader.css';
 
 export interface IContractDebugHeaderProps {
-  contract: MSSafeEntity;
+  contract: MSVaultEntity;
   hoverable?: boolean;
 }
 

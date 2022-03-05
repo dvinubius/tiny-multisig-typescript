@@ -32,12 +32,12 @@ const SingleMultiSigPage: FC = () => {
         {doesntExist && (
           <>
             <div style={{ color: softTextColor, fontSize: '1.25rem' }}>
-              <FileUnknownOutlined /> This safe doesn't exist
+              <FileUnknownOutlined /> This vault doesn't exist
             </div>
             <Link to="/">
               <Button style={{ minWidth: mediumButtonMinWidth }} size="large" className="flex-center-imp">
                 <HomeOutlined />
-                My Safes
+                My Vaults
               </Button>
             </Link>
           </>
@@ -52,7 +52,7 @@ const SingleMultiSigPage: FC = () => {
               gap: '1rem',
             }}>
             <Spin size="large" />
-            <div style={{ color: softTextColor, fontSize: '1.25rem' }}>Connecting to Safe Contract...</div>
+            <div style={{ color: softTextColor, fontSize: '1.25rem' }}>Connecting to Vault Contract...</div>
           </div>
         )}
       </div>
@@ -63,7 +63,7 @@ const SingleMultiSigPage: FC = () => {
     <Link to="/">
       <Button style={{ minWidth: mediumButtonMinWidth }} size="large" className="flex-center-imp">
         <HomeOutlined />
-        My Safes
+        My Vaults
       </Button>
     </Link>
   );
