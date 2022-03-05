@@ -6,9 +6,13 @@ An **minimal** multi sig wallet app built with scaffold eth in solidity and reac
 
 Ported from [JS version](https://github.com/dvinubius/tiny-multisig) 
 
-## JS version live on [Rinkeby](https://tiny-multisig.surge.sh) 🤩
+## JS version live on [Rinkeby](https://tiny-multisig.surge.sh) 🤩 
 
-In many ways just a Proof of Concept, not suitable for production.
+This one is just as pretty, promise.
+
+![tiny-multisig](https://user-images.githubusercontent.com/32189942/156881313-c1205bcc-5585-4514-938b-3e8d3f5895d9.png)
+
+Still a Proof of Concept, not ready for production.
 
 ## Specs
 
