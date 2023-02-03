@@ -1,6 +1,6 @@
 # Tiny Multi Sig (typescript)
 
-An **minimal** multi sig wallet app built with scaffold eth in solidity and react with **typescript**. 
+A **minimal** multi sig wallet app built with scaffold eth in solidity and react with **typescript**. 
 
 ## @dev
 
